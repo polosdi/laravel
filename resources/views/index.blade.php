@@ -111,10 +111,10 @@
         .nav-logo-icon svg { width: 20px; height: 20px; color: white; }
 
         .nav-logo-text {
-            font-size: 1.3rem; font-weight: 800;
-            background: var(--grad);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text;
+        font-size:1.2rem;font-weight:800;
+        color:var(--text);
+        letter-spacing:-.01em;
+        transition:color .4s;
         }
 
         .nav-links {
@@ -981,7 +981,7 @@
             <div class="testimonial-author">
                 <div class="testimonial-avatar" style="background:linear-gradient(135deg,#667eea,#764ba2)">AN</div>
                 <div>
-                    <div class="testimonial-name">Andi Nugraha</div>
+                    <div class="testimonial-name">Sasa</div>
                     <div class="testimonial-role">Siswa PKL — Jurusan TKJ</div>
                 </div>
             </div>
