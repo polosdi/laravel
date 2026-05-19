@@ -434,6 +434,7 @@
 
         @yield('styles')
     </style>
+    @yield('head')
 </head>
 <body>
 <div class="layout">
