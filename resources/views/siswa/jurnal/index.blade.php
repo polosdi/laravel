@@ -3,9 +3,11 @@
 @section('page_title','Jurnal Harian')
 @section('nav_jurnal','active')
 
-@section('styles')
+@section('head')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<style>
+@endsection
+
+@section('styles')
 .jurnal-layout {
     display: grid;
     grid-template-columns: 1fr 300px;
@@ -109,7 +111,11 @@
 @media (max-width: 640px) {
     .stats-row { grid-template-columns: 1fr 1fr; }
 }
-</style>
+
+/* gap antar section */
+.stats-row { margin-bottom: 20px; }
+.jurnal-layout > div:first-child > .card { margin-bottom: 0; }
+.info-panel + .info-panel { margin-top: 16px; }
 @endsection
 
 @section('content')
@@ -317,55 +323,6 @@
 
     {{-- RIGHT: Info Panel --}}
     <div>
-        {{-- Quick Stats --}}
-        <div class="info-panel" style="margin-bottom:16px">
-            <div class="info-panel-header">
-                <i class="fa-solid fa-chart-pie"></i>
-                <span class="info-panel-title">Ringkasan Cepat</span>
-            </div>
-            <div class="info-panel-body">
-                <div class="quick-stat">
-                    <span class="quick-stat-label">
-                        <i class="fa-solid fa-book-open" style="color:#667eea"></i> Total Jurnal
-                    </span>
-                    <span class="quick-stat-val">{{ $totalJurnal }}</span>
-                </div>
-                <div class="quick-stat">
-                    <span class="quick-stat-label">
-                        <i class="fa-solid fa-circle-check" style="color:#22c55e"></i> Tervalidasi
-                    </span>
-                    <span class="quick-stat-val" style="color:#22c55e">{{ $jurnalValid }}</span>
-                </div>
-                <div class="quick-stat">
-                    <span class="quick-stat-label">
-                        <i class="fa-solid fa-clock" style="color:#f59e0b"></i> Pending
-                    </span>
-                    <span class="quick-stat-val" style="color:#f59e0b">{{ $jurnalPending }}</span>
-                </div>
-                @php $ditolak = $totalJurnal - $jurnalValid - $jurnalPending; @endphp
-                @if($ditolak > 0)
-                <div class="quick-stat">
-                    <span class="quick-stat-label">
-                        <i class="fa-solid fa-circle-xmark" style="color:#ef4444"></i> Ditolak
-                    </span>
-                    <span class="quick-stat-val" style="color:#ef4444">{{ $ditolak }}</span>
-                </div>
-                @endif
-
-                @if($totalJurnal > 0)
-                <div style="margin-top:12px">
-                    <div style="display:flex;justify-content:space-between;font-size:.7rem;color:var(--text-sub);margin-bottom:5px">
-                        <span>Progress Validasi</span>
-                        <span>{{ $totalJurnal > 0 ? round(($jurnalValid/$totalJurnal)*100) : 0 }}%</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width:{{ $totalJurnal > 0 ? ($jurnalValid/$totalJurnal)*100 : 0 }}%"></div>
-                    </div>
-                </div>
-                @endif
-            </div>
-        </div>
-
         {{-- Tips Panel --}}
         <div class="info-panel">
             <div class="info-panel-header">
