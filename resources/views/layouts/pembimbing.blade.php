@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>SIMPKL Pembimbing — @yield('title','Dashboard')</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 
@@ -158,15 +159,18 @@
         }
         [data-theme="light"] .toggle-thumb{transform:translateX(0)}
         [data-theme="dark"]  .toggle-thumb{transform:translateX(22px)}
+        .toggle-thumb i{font-size:9px;color:rgba(255,255,255,.95);line-height:1}
 
         .logout-btn{
             display:flex;align-items:center;gap:10px;
             padding:10px 12px;border-radius:10px;
             color:var(--text-muted);font-weight:500;font-size:.825rem;
-            transition:all .2s;cursor:pointer;border:none;background:none;
+            transition:all .2s;cursor:pointer;
+            border:1.5px solid rgba(239,68,68,.25);
+            background:transparent;
             width:100%;font-family:var(--font);
         }
-        .logout-btn:hover{background:rgba(239,68,68,.08);color:#ef4444}
+        .logout-btn:hover{background:rgba(239,68,68,.07);color:#ef4444;border-color:#ef4444}
 
         /* ══ MAIN ══ */
         .main{
@@ -314,7 +318,7 @@
 {{-- ── SIDEBAR ── --}}
 <aside class="sidebar">
     <!-- <a href="{{ route('pembimbing.dashboard') }}" class="sb-logo">
-        <div class="sb-logo-icon">🎓</div>
+        <div class="sb-logo-icon"><i class="fa-solid fa-graduation-cap" style="color:#fff;font-size:15px"></i></div>
         <span class="sb-logo-text">SIMPKL</span>
     </a> -->
 
@@ -333,14 +337,14 @@
         <a href="{{ route('pembimbing.dashboard') }}"
            data-tip="Dashboard"
            class="nav-a {{ request()->routeIs('pembimbing.dashboard') ? 'active' : '' }}">
-            <span class="nav-ic">🏠</span> <span class="nav-label">Dashboard</span>
+            <span class="nav-ic"><i class="fa-solid fa-gauge"></i></span> <span class="nav-label">Dashboard</span>
         </a>
 
         <div class="nav-grp" style="margin-top:8px">Kelola Siswa</div>
         <a href="{{ route('pembimbing.pkl.index') }}"
            data-tip="Pengajuan PKL"
            class="nav-a {{ request()->routeIs('pembimbing.pkl.*') ? 'active' : '' }}">
-            <span class="nav-ic">📋</span> <span class="nav-label">Pengajuan PKL</span>
+            <span class="nav-ic"><i class="fa-solid fa-file-circle-plus"></i></span> <span class="nav-label">Pengajuan PKL</span>
             @php
                 $pendingPkl = \App\Models\PklPengajuan::where('pembimbing_id', auth()->id())
                     ->where('status_pembimbing','pending')->count();
@@ -351,7 +355,7 @@
         <a href="{{ route('pembimbing.jurnal.index') }}"
            data-tip="Jurnal Harian"
            class="nav-a {{ request()->routeIs('pembimbing.jurnal.*') ? 'active' : '' }}">
-            <span class="nav-ic">📓</span> <span class="nav-label">Jurnal Harian</span>
+            <span class="nav-ic"><i class="fa-solid fa-book-open"></i></span> <span class="nav-label">Jurnal Harian</span>
             @php
                 $pendingJurnal = \App\Models\JurnalHarian::whereHas('siswa', fn($q) =>
                     $q->whereHas('pklAnggota', fn($q2) =>
@@ -365,13 +369,13 @@
         <a href="{{ route('pembimbing.absensi.index') }}"
            data-tip="Rekap Absensi"
            class="nav-a {{ request()->routeIs('pembimbing.absensi.*') ? 'active' : '' }}">
-            <span class="nav-ic">📅</span> <span class="nav-label">Rekap Absensi</span>
+            <span class="nav-ic"><i class="fa-solid fa-calendar-check"></i></span> <span class="nav-label">Rekap Absensi</span>
         </a>
 
         <a href="{{ route('pembimbing.laporan.index') }}"
            data-tip="Laporan PKL"
            class="nav-a {{ request()->routeIs('pembimbing.laporan.*') ? 'active' : '' }}">
-            <span class="nav-ic">📄</span> <span class="nav-label">Laporan PKL</span>
+            <span class="nav-ic"><i class="fa-solid fa-file-lines"></i></span> <span class="nav-label">Laporan PKL</span>
             @php
                 $pendingLaporan = \App\Models\LaporanPkl::whereHas('siswa', fn($q) =>
                     $q->whereHas('pklAnggota', fn($q2) =>
@@ -385,14 +389,14 @@
         <a href="{{ route('pembimbing.nilai.index') }}"
            data-tip="Input Nilai"
            class="nav-a {{ request()->routeIs('pembimbing.nilai.*') ? 'active' : '' }}">
-            <span class="nav-ic">⭐</span> <span class="nav-label">Input Nilai</span>
+            <span class="nav-ic"><i class="fa-solid fa-star"></i></span> <span class="nav-label">Input Nilai</span>
         </a>
 
         <div class="nav-grp" style="margin-top:8px">Akun</div>
         <a href="{{ route('pembimbing.profil') }}"
            data-tip="Profil Saya"
            class="nav-a {{ request()->routeIs('pembimbing.profil') ? 'active' : '' }}">
-            <span class="nav-ic">👤</span> <span class="nav-label">Profil Saya</span>
+            <span class="nav-ic"><i class="fa-solid fa-user-pen"></i></span> <span class="nav-label">Profil Saya</span>
         </a>
     </nav>
 
@@ -400,7 +404,7 @@
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit" class="logout-btn">
-                <span style="flex-shrink:0">🚪</span>
+                <i class="fa-solid fa-right-from-bracket" style="flex-shrink:0;font-size:.82rem"></i>
                 <span class="logout-label">Keluar</span>
             </button>
         </form>
@@ -418,20 +422,20 @@
         </div>
         <div class="topbar-right">
             <div class="topbar-date">{{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}</div>
-            <div class="notif-btn">🔔<span class="notif-dot"></span></div>
+            <div class="notif-btn"><i class="fa-solid fa-bell" style="font-size:.85rem"></i><span class="notif-dot"></span></div>
             <div class="theme-toggle" onclick="toggleTheme()" title="Ganti tema">
                 <div class="toggle-thumb">
-                    <span id="ico-sun" style="font-size:10px">☀️</span>
-                    <span id="ico-moon" style="font-size:10px;display:none">🌙</span>
+                    <i id="ico-sun" class="fa-solid fa-sun" style="font-size:9px;color:rgba(255,255,255,.95)"></i>
+                    <i id="ico-moon" class="fa-solid fa-moon" style="font-size:9px;color:rgba(255,255,255,.95);display:none"></i>
                 </div>
             </div>
         </div>
     </header>
 
     <main class="page">
-        @if(session('success'))<div class="al al-ok">✅ {{ session('success') }}</div>@endif
-        @if(session('error'))<div class="al al-err">❌ {{ session('error') }}</div>@endif
-        @if(session('info'))<div class="al al-info">ℹ️ {{ session('info') }}</div>@endif
+        @if(session('success'))<div class="al al-ok"><i class="fa-solid fa-circle-check"></i> {{ session('success') }}</div>@endif
+        @if(session('error'))<div class="al al-err"><i class="fa-solid fa-circle-xmark"></i> {{ session('error') }}</div>@endif
+        @if(session('info'))<div class="al al-info"><i class="fa-solid fa-circle-info"></i> {{ session('info') }}</div>@endif
         @yield('content')
     </main>
 </div>
@@ -458,7 +462,11 @@ if(savedTheme==='dark'){
 function toggleSidebar(){
     const sb=document.querySelector('.sidebar');
     const btn=document.getElementById('sidebarToggle');
+    const topbar=document.querySelector('.topbar');
+    const mainEl=document.querySelector('.main');
     const isCollapsed=sb.classList.toggle('collapsed');
+    if(topbar) topbar.classList.toggle('collapsed',isCollapsed);
+    if(mainEl) mainEl.classList.toggle('collapsed',isCollapsed);
     btn.classList.toggle('open',!isCollapsed);
     localStorage.setItem('simpkl-sidebar',isCollapsed?'collapsed':'open');
 }
@@ -467,8 +475,12 @@ function toggleSidebar(){
     const state=localStorage.getItem('simpkl-sidebar');
     const sb=document.querySelector('.sidebar');
     const btn=document.getElementById('sidebarToggle');
+    const topbar=document.querySelector('.topbar');
+    const mainEl=document.querySelector('.main');
     if(state==='collapsed'){
         sb.classList.add('collapsed');
+        if(topbar) topbar.classList.add('collapsed');
+        if(mainEl) mainEl.classList.add('collapsed');
         btn.classList.remove('open');
     } else {
         btn.classList.add('open');
