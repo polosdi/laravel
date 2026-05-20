@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Dashboard') — SIMPKL</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         :root { --font: 'Poppins', 'Segoe UI', system-ui, sans-serif; }
@@ -58,140 +59,177 @@
         /* ── LAYOUT ── */
         .layout { display: flex; min-height: 100vh; }
 
-        /* ── SIDEBAR ── */
-        .sidebar {
-            width: 240px; flex-shrink: 0;
-            background: var(--sidebar-bg);
-            border-right: 1px solid var(--sidebar-border);
-            display: flex; flex-direction: column;
-            position: fixed; top:0; left:0; bottom:0;
-            z-index: 100;
-            transition: background .4s, border-color .4s, width .3s cubic-bezier(.4,0,.2,1);
-            overflow: hidden;
+        /* ══ SIDEBAR ══ */
+        .sidebar{
+            width:250px;min-height:100vh;background:var(--sidebar-bg);
+            border-right:1px solid var(--sidebar-border);
+            display:flex;flex-direction:column;
+            position:fixed;top:0;left:0;bottom:0;z-index:50;
+            backdrop-filter:blur(20px);overflow:hidden;
+            transition:width .35s cubic-bezier(.4,0,.2,1),
+                        background .4s,border-color .4s;
+        }
+        .sidebar.collapsed{width:68px}
+
+        /* ── SB USER ── */
+        .sb-user{
+            padding:16px 14px;border-bottom:1px solid var(--sidebar-border);
+            display:flex;align-items:center;gap:12px;white-space:nowrap;overflow:hidden;
+        }
+        .sb-avatar{
+            width:40px;height:40px;border-radius:50%;background:var(--grad);
+            display:flex;align-items:center;justify-content:center;
+            font-size:.78rem;font-weight:700;color:#fff;flex-shrink:0;letter-spacing:.02em;
+        }
+        .sb-uinfo{transition:opacity .25s,transform .25s;overflow:hidden}
+        .sidebar.collapsed .sb-uinfo{opacity:0;transform:translateX(-10px);pointer-events:none}
+        .sb-uname{font-weight:600;font-size:.825rem;color:var(--text);line-height:1.3}
+        .sb-urole{
+            font-size:.7rem;color:var(--text-muted);margin-top:2px;
+            background:rgba(102,126,234,.1);padding:2px 8px;border-radius:20px;
+            display:inline-block;font-weight:500;
         }
 
-        .sidebar.collapsed { width: 64px; }
+        .sb-nav{flex:1;padding:14px 12px;overflow-y:auto;overflow-x:hidden}
+        .sb-nav::-webkit-scrollbar{width:3px}
+        .sb-nav::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 
-        .sidebar-header {
-            padding: 0 16px;
-            display: flex; align-items: center; gap: 10px;
-            border-bottom: 1px solid var(--sidebar-border);
-            height: 64px; flex-shrink: 0;
+        .nav-grp{
+            font-size:.65rem;font-weight:700;letter-spacing:.09em;
+            text-transform:uppercase;color:var(--text-muted);
+            padding:10px 10px 5px;opacity:.7;white-space:nowrap;
+            transition:opacity .2s,height .3s;
         }
+        .sidebar.collapsed .nav-grp{opacity:0;pointer-events:none;height:0;padding:0;overflow:hidden}
 
-        .brand-ico {
-            width: 36px; height: 36px; flex-shrink: 0;
-            background: var(--grad); border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 14px rgba(102,126,234,.4);
+        .nav-a{
+            display:flex;align-items:center;gap:10px;
+            padding:10px 12px;border-radius:10px;
+            text-decoration:none;color:var(--sidebar-text);
+            font-weight:500;font-size:.825rem;margin-bottom:2px;
+            transition:all .2s;white-space:nowrap;overflow:hidden;
+            position:relative;
         }
-        .brand-ico svg { width: 18px; height: 18px; color: white; }
-
-        .brand-name {
-            font-size: 1.1rem; font-weight: 800;
-            background: var(--grad);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text;
-            white-space: nowrap;
-            transition: opacity .2s, transform .2s;
+        .nav-a:hover{background:rgba(102,126,234,.08);color:var(--primary)}
+        .nav-a.active{
+            background:linear-gradient(135deg,rgba(102,126,234,.15),rgba(118,75,162,.1));
+            color:var(--primary);font-weight:600;
         }
-        .sidebar.collapsed .brand-name { opacity: 0; transform: translateX(-8px); pointer-events: none; }
-
-        /* NAV */
-        .sidebar-nav { flex: 1; padding: 12px 8px; overflow-y: auto; overflow-x: hidden; }
-        .sidebar-nav::-webkit-scrollbar { width: 3px; }
-        .sidebar-nav::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-        .nav-section-label {
-            font-size: .6rem; font-weight: 700;
-            color: var(--text-sub); letter-spacing: .1em; text-transform: uppercase;
-            padding: 0 10px; margin: 14px 0 5px;
-            white-space: nowrap;
-            transition: opacity .2s;
+        .nav-ic{font-size:.95rem;width:20px;text-align:center;flex-shrink:0}
+        .nav-label{transition:opacity .25s,transform .25s}
+        .sidebar.collapsed .nav-label{opacity:0;transform:translateX(-8px);pointer-events:none}
+        .nav-badge{
+            margin-left:auto;background:var(--grad);color:#fff;
+            font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:20px;
+            transition:opacity .2s;flex-shrink:0;
         }
-        .sidebar.collapsed .nav-section-label { opacity: 0; }
+        .sidebar.collapsed .nav-badge{opacity:0}
 
-        .nav-item {
-            display: flex; align-items: center; gap: 10px;
-            padding: 9px 10px; border-radius: 10px;
-            cursor: pointer; transition: all .18s;
-            color: var(--sidebar-text);
-            text-decoration: none;
-            white-space: nowrap;
-            position: relative;
-            margin-bottom: 2px;
+        /* Tooltip saat collapsed */
+        .sidebar.collapsed .nav-a::after{
+            content:attr(data-tip);
+            position:absolute;left:58px;top:50%;transform:translateY(-50%);
+            background:var(--text);color:var(--bg);
+            font-size:.72rem;font-weight:600;padding:5px 10px;
+            border-radius:8px;white-space:nowrap;pointer-events:none;
+            opacity:0;transition:opacity .15s;z-index:100;
+            box-shadow:0 4px 12px rgba(0,0,0,.15);
         }
+        .sidebar.collapsed .nav-a:hover::after{opacity:1}
 
-        .nav-item:hover { background: var(--sidebar-active); color: var(--primary); }
-
-        .nav-item.active {
-            background: var(--sidebar-active);
-            color: var(--primary); font-weight: 600;
+        .sb-footer{
+            padding:14px 12px;border-top:1px solid var(--sidebar-border);
+            overflow:hidden;white-space:nowrap;
         }
-
-        .nav-item.active::before {
-            content: ''; position: absolute;
-            left: 0; top: 25%; bottom: 25%;
-            width: 3px; border-radius: 0 3px 3px 0;
-            background: var(--text);
+        .btn-logout{
+            display:flex;align-items:center;gap:10px;
+            padding:10px 12px;border-radius:10px;
+            color:var(--text-muted);font-weight:500;font-size:.825rem;
+            transition:all .2s;cursor:pointer;border:1.5px solid rgba(239,68,68,.25);
+            background:transparent;width:100%;font-family:var(--font);
         }
+        .btn-logout:hover{background:rgba(239,68,68,.07);color:#ef4444;border-color:#ef4444}
+        .sidebar.collapsed .btn-logout .nav-label{opacity:0;transform:translateX(-8px);pointer-events:none}
 
-        .nav-item.danger { color: #ef4444; }
-        .nav-item.danger:hover { background: rgba(239,68,68,.08); color: #ef4444; }
-
-        .btn-logout {
-            display: flex; align-items: center; gap: 8px;
-            padding: 9px 12px; width: 100%; border-radius: 10px;
-            background: transparent; border: 1.5px solid rgba(239,68,68,.25);
-            color: #ef4444; font-family: var(--font);
-            font-size: .8rem; font-weight: 600;
-            cursor: pointer; transition: all .2s; text-align: left;
+        /* ══ MAIN ══ */
+        .main{
+            margin-left:250px;padding-top:62px;
+            flex:1;display:flex;flex-direction:column;min-height:100vh;
+            transition:margin-left .35s cubic-bezier(.4,0,.2,1);
+            min-width:0;
         }
-        .btn-logout:hover { background: rgba(239,68,68,.07); border-color: #ef4444; }
-        .sidebar.collapsed .btn-logout .nav-label { opacity: 0; width: 0; overflow: hidden; }
+        .sidebar.collapsed ~ .main,
+        .main.collapsed{margin-left:68px}
 
-        .nav-ico {
-            width: 36px; height: 36px; flex-shrink: 0;
-            display: flex; align-items: center; justify-content: center;
+        /* ══ TOPBAR ══ */
+        .topbar{
+            height:62px;background:var(--card-bg);
+            border-bottom:1px solid var(--border);
+            display:flex;align-items:center;justify-content:space-between;
+            padding:0 20px 0 16px;position:fixed;
+            left:250px;right:0;top:0;z-index:40;
+            backdrop-filter:blur(16px);
+            transition:left .35s cubic-bezier(.4,0,.2,1),background .4s;
         }
-        .nav-ico svg { width: 18px; height: 18px; }
+        .sidebar.collapsed ~ .main .topbar,
+        .topbar.collapsed{left:68px}
 
-        .nav-label { font-size: .82rem; transition: opacity .2s, transform .2s; }
-        .sidebar.collapsed .nav-label { opacity: 0; transform: translateX(-8px); pointer-events: none; }
+        .topbar-left{display:flex;align-items:center;gap:12px}
+        .topbar-title{font-size:1rem;font-weight:700;color:var(--text);letter-spacing:-.01em}
+        .topbar-right{display:flex;align-items:center;gap:12px}
 
-        .nav-badge {
-            margin-left: auto; padding: 2px 7px;
-            background: var(--grad); color: white;
-            border-radius: 20px; font-size: .6rem; font-weight: 700;
-            transition: opacity .2s;
+        /* Hamburger */
+        .sb-toggle{
+            width:36px;height:36px;border-radius:10px;
+            background:rgba(102,126,234,.07);border:1px solid var(--border);
+            display:flex;align-items:center;justify-content:center;
+            cursor:pointer;transition:all .2s;flex-shrink:0;
+            flex-direction:column;gap:4px;padding:9px;
         }
-        .sidebar.collapsed .nav-badge { opacity: 0; }
-
-        /* Tooltip for collapsed sidebar */
-        .nav-item .tooltip {
-            display: none;
-            position: absolute; left: 56px; top: 50%;
-            transform: translateY(-50%);
-            background: var(--sidebar-bg);
-            border: 1px solid var(--border);
-            color: var(--text);
-            padding: 5px 10px; border-radius: 8px;
-            font-size: .75rem; font-weight: 600;
-            white-space: nowrap;
-            box-shadow: 0 4px 16px rgba(0,0,0,.12);
-            z-index: 999; pointer-events: none;
+        .sb-toggle:hover{border-color:var(--primary);background:rgba(102,126,234,.12)}
+        .sb-toggle span{
+            display:block;height:2px;border-radius:2px;
+            background:var(--text-muted);transition:all .3s;width:100%;
         }
+        .sb-toggle.open span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+        .sb-toggle.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+        .sb-toggle.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
 
-        .sidebar.collapsed .nav-item:hover .tooltip { display: block; }
-
-        /* SIDEBAR FOOTER */
-        .sidebar-footer {
-            padding: 8px;
-            border-top: 1px solid var(--sidebar-border);
-            flex-shrink: 0;
+        .topbar-date{
+            font-size:.73rem;color:var(--text-muted);font-weight:500;
+            background:rgba(102,126,234,.07);padding:5px 12px;
+            border-radius:20px;border:1px solid var(--border);
         }
+        .notif-btn{
+            width:36px;height:36px;border-radius:10px;
+            background:rgba(102,126,234,.07);border:1px solid var(--border);
+            display:flex;align-items:center;justify-content:center;
+            cursor:pointer;font-size:.9rem;color:var(--text-muted);position:relative;transition:all .2s;
+        }
+        .notif-btn:hover{border-color:var(--primary);background:rgba(102,126,234,.12);color:var(--primary)}
+        .notif-dot{
+            position:absolute;top:7px;right:7px;
+            width:6px;height:6px;background:#ef4444;
+            border-radius:50%;border:1.5px solid var(--surface);
+        }
+        /* Theme toggle */
+        .theme-toggle{
+            width:48px;height:26px;background:var(--toggle-bg);
+            border:1px solid var(--toggle-border);border-radius:50px;
+            cursor:pointer;display:flex;align-items:center;padding:3px;
+            transition:all .3s;flex-shrink:0;
+        }
+        .toggle-thumb{
+            width:18px;height:18px;border-radius:50%;background:var(--grad);
+            transition:transform .3s cubic-bezier(.34,1.4,.64,1);
+            display:flex;align-items:center;justify-content:center;
+            box-shadow:0 2px 8px rgba(102,126,234,.4);
+        }
+        [data-theme="light"] .toggle-thumb{transform:translateX(0)}
+        [data-theme="dark"]  .toggle-thumb{transform:translateX(22px)}
+        .toggle-thumb i{font-size:9px;color:rgba(255,255,255,.95);line-height:1}
 
-        .user-card {
+        .content{padding:26px 28px;flex:1}
             display: flex; align-items: center; gap: 10px;
             padding: 10px; border-radius: 10px;
             background: var(--tag-bg); margin-bottom: 4px;
@@ -432,6 +470,73 @@
             .content { padding: 16px; }
         }
 
+        /* ── SB USER (avatar di atas sidebar) ── */
+        .sb-user {
+            padding: 16px 14px;
+            border-bottom: 1px solid var(--sidebar-border);
+            display: flex; align-items: center; gap: 12px;
+            white-space: nowrap; overflow: hidden;
+        }
+        .sb-avatar {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--grad); flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: .78rem; font-weight: 700; color: #fff; letter-spacing: .02em;
+        }
+        .sb-uinfo { transition: opacity .25s, transform .25s; overflow: hidden; }
+        .sidebar.collapsed .sb-uinfo { opacity: 0; transform: translateX(-10px); pointer-events: none; }
+        .sb-uname { font-weight: 600; font-size: .82rem; color: var(--text); line-height: 1.3; }
+        .sb-urole {
+            font-size: .68rem; color: var(--text-muted); margin-top: 2px;
+            background: rgba(102,126,234,.1); padding: 2px 8px;
+            border-radius: 20px; display: inline-block; font-weight: 500;
+        }
+
+        /* ── NAV-ICO for FA icons ── */
+        .nav-ico { width: 36px; height: 36px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: .92rem; }
+
+        /* ── SB-TOGGLE (hamburger animasi) ── */
+        .sb-toggle {
+            width: 36px; height: 36px; border-radius: 10px;
+            background: rgba(102,126,234,.07); border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all .2s; flex-shrink: 0;
+            flex-direction: column; gap: 4px; padding: 9px;
+        }
+        .sb-toggle:hover { border-color: var(--primary); background: rgba(102,126,234,.12); }
+        .sb-toggle span {
+            display: block; height: 2px; border-radius: 2px;
+            background: var(--text-muted); transition: all .3s; width: 100%;
+        }
+        .sb-toggle.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+        .sb-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+        .sb-toggle.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+        /* ── TOPBAR DATE PILL ── */
+        .topbar-date {
+            font-size: .72rem; color: var(--text-muted); font-weight: 500;
+            background: rgba(102,126,234,.07); padding: 5px 12px;
+            border-radius: 20px; border: 1px solid var(--border);
+        }
+
+        /* ── TOPNAV LEFT ── */
+        .topnav-left { display: flex; align-items: center; gap: 12px; }
+
+        /* Tooltip saat collapsed */
+        .sidebar.collapsed .nav-item::after {
+            content: attr(data-tip);
+            position: absolute; left: 58px; top: 50%; transform: translateY(-50%);
+            background: var(--text); color: var(--bg);
+            font-size: .72rem; font-weight: 600; padding: 5px 10px;
+            border-radius: 8px; white-space: nowrap; pointer-events: none;
+            opacity: 0; transition: opacity .15s; z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,.15);
+        }
+        .sidebar.collapsed .nav-item:hover::after { opacity: 1; }
+
+        /* ── SIDEBAR BORDER ── */
+        .sidebar { border-right: 1px solid var(--sidebar-border); }
+
         @yield('styles')
     </style>
     @yield('head')
@@ -442,125 +547,118 @@
     <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
 
-        {{-- Brand Header --}}
-        <div class="sidebar-header">
-            <div class="brand-ico">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        {{-- User Avatar + Info --}}
+        <div class="sb-user">
+            <div class="sb-avatar">
+                @php $profil = Auth::user()->profilSiswa; @endphp
+                @if($profil?->foto_profil)
+                    <img src="{{ asset('storage/'.$profil->foto_profil) }}" alt="foto"
+                         style="width:100%;height:100%;border-radius:50%;object-fit:cover">
+                @else
+                    {{ Auth::user()->inisial() }}
+                @endif
             </div>
-            <span class="brand-name">SIMPKL</span>
+            <div class="sb-uinfo">
+                <div class="sb-uname">{{ Auth::user()->namaLengkap() }}</div>
+                <div class="sb-urole">Siswa PKL</div>
+            </div>
         </div>
 
         {{-- Navigation --}}
-        <nav class="sidebar-nav">
-            <div class="nav-section-label">Menu Utama</div>
+        <nav class="sb-nav">
+            <div class="nav-grp">Menu Utama</div>
 
-            <a href="{{ route('siswa.dashboard') }}" class="nav-item @yield('nav_dashboard')">
-                <div class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>
+            <a href="{{ route('siswa.dashboard') }}" data-tip="Dashboard"
+               class="nav-a @yield('nav_dashboard')">
+                <span class="nav-ic"><i class="fa-solid fa-gauge"></i></span>
                 <span class="nav-label">Dashboard</span>
-                <span class="tooltip">Dashboard</span>
             </a>
 
-            <a href="{{ route('siswa.profil') }}" class="nav-item @yield('nav_profil')">
-                <div class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-                <span class="nav-label">Profil Saya</span>
-                <span class="tooltip">Profil Saya</span>
-            </a>
+            <div class="nav-grp" style="margin-top:8px">PKL</div>
 
-            <div class="nav-section-label">PKL</div>
-
-            <a href="{{ route('siswa.pkl.pengajuan') }}" class="nav-item @yield('nav_pengajuan')">
-                <div class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div>
+            <a href="{{ route('siswa.pkl.pengajuan') }}" data-tip="Pengajuan PKL"
+               class="nav-a @yield('nav_pengajuan')">
+                <span class="nav-ic"><i class="fa-solid fa-file-circle-plus"></i></span>
                 <span class="nav-label">Pengajuan PKL</span>
-                <span class="tooltip">Pengajuan PKL</span>
             </a>
 
-            <a href="{{ route('siswa.jurnal') }}" class="nav-item @yield('nav_jurnal')">
-                <div class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+            <a href="{{ route('siswa.jurnal') }}" data-tip="Jurnal Harian"
+               class="nav-a @yield('nav_jurnal')">
+                <span class="nav-ic"><i class="fa-solid fa-book-open"></i></span>
                 <span class="nav-label">Jurnal Harian</span>
                 @php $jp = \App\Models\JurnalHarian::olehSiswa(Auth::id())->pending()->count(); @endphp
                 @if($jp > 0)<span class="nav-badge">{{ $jp }}</span>@endif
-                <span class="tooltip">Jurnal Harian</span>
             </a>
 
-            <a href="{{ route('siswa.absensi') }}" class="nav-item @yield('nav_absensi')">
-                <div class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+            <a href="{{ route('siswa.absensi') }}" data-tip="Absensi"
+               class="nav-a @yield('nav_absensi')">
+                <span class="nav-ic"><i class="fa-solid fa-calendar-check"></i></span>
                 <span class="nav-label">Absensi</span>
-                <span class="tooltip">Absensi</span>
             </a>
 
-            <div class="nav-section-label">Laporan</div>
+            <div class="nav-grp" style="margin-top:8px">Laporan</div>
 
-            <a href="{{ route('siswa.laporan') }}" class="nav-item @yield('nav_laporan')">
-                <div class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+            <a href="{{ route('siswa.laporan') }}" data-tip="Laporan PKL"
+               class="nav-a @yield('nav_laporan')">
+                <span class="nav-ic"><i class="fa-solid fa-file-lines"></i></span>
                 <span class="nav-label">Laporan PKL</span>
-                <span class="tooltip">Laporan PKL</span>
             </a>
 
-            <a href="{{ route('siswa.nilai') }}" class="nav-item @yield('nav_nilai')">
-                <div class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+            <a href="{{ route('siswa.nilai') }}" data-tip="Nilai PKL"
+               class="nav-a @yield('nav_nilai')">
+                <span class="nav-ic"><i class="fa-solid fa-star"></i></span>
                 <span class="nav-label">Nilai PKL</span>
-                <span class="tooltip">Nilai PKL</span>
             </a>
 
-            <a href="{{ route('siswa.log') }}" class="nav-item @yield('nav_log')">
-                <div class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <a href="{{ route('siswa.log') }}" data-tip="Log Aktivitas"
+               class="nav-a @yield('nav_log')">
+                <span class="nav-ic"><i class="fa-solid fa-clock-rotate-left"></i></span>
                 <span class="nav-label">Log Aktivitas</span>
-                <span class="tooltip">Log Aktivitas</span>
+            </a>
+
+            <div class="nav-grp" style="margin-top:8px">Akun</div>
+
+            <a href="{{ route('siswa.profil') }}" data-tip="Profil Saya"
+               class="nav-a @yield('nav_profil')">
+                <span class="nav-ic"><i class="fa-solid fa-user-pen"></i></span>
+                <span class="nav-label">Profil Saya</span>
             </a>
         </nav>
 
-        {{-- Footer: User Card + Logout --}}
-        <div class="sidebar-footer">
-            <div class="user-card">
-                <div class="user-avatar">
-                    @php $profil = Auth::user()->profilSiswa; @endphp
-                    @if($profil?->foto_profil)
-                        <img src="{{ asset('storage/'.$profil->foto_profil) }}" alt="foto"
-                             style="width:100%;height:100%;border-radius:50%;object-fit:cover">
-                    @else
-                        {{ Auth::user()->inisial() }}
-                    @endif
-                </div>
-                <div class="user-info">
-                    <div class="user-name">{{ Auth::user()->namaLengkap() }}</div>
-                    <div class="user-role">Siswa PKL</div>
-                </div>
-            </div>
+        {{-- Footer: Logout --}}
+        <div class="sb-footer">
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="btn-logout">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;flex-shrink:0"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    <i class="fa-solid fa-right-from-bracket" style="flex-shrink:0;font-size:.82rem"></i>
                     <span class="nav-label">Keluar</span>
                 </button>
             </form>
         </div>
     </aside>
 
-    <!-- TOPNAV -->
-    <div class="topnav" id="topnav">
-        <button class="hamburger" onclick="toggleSidebar()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-        </button>
-        <div>
-            <div class="topnav-title">@yield('page_title', 'Dashboard')</div>
+    <!-- TOPBAR -->
+    <header class="topbar" id="topnav">
+        <div class="topbar-left">
+            <div class="sb-toggle" id="sidebarToggle" onclick="toggleSidebar()">
+                <span></span><span></span><span></span>
+            </div>
+            <div class="topbar-title">@yield('page_title', 'Dashboard')</div>
         </div>
-        <div class="topnav-right">
-            <button class="theme-toggle" onclick="toggleTheme()">
+        <div class="topbar-right">
+            <div class="topbar-date">{{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}</div>
+            <div class="theme-toggle" onclick="toggleTheme()" title="Ganti tema">
                 <div class="toggle-thumb">
-                    <svg id="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-                    </svg>
-                    <svg id="ico-moon" style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                    </svg>
+                    <i id="ico-sun" class="fa-solid fa-sun" style="font-size:9px;color:rgba(255,255,255,.95)"></i>
+                    <i id="ico-moon" class="fa-solid fa-moon" style="font-size:9px;color:rgba(255,255,255,.95);display:none"></i>
                 </div>
-            </button>
-            <div class="icon-btn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-                <div class="notif-dot"></div>
+            </div>
+            <div class="notif-btn">
+                <i class="fa-solid fa-bell" style="font-size:.85rem"></i>
+                <span class="notif-dot"></span>
             </div>
         </div>
-    </div>
+    </header>
 
     <!-- MAIN -->
     <main class="main" id="main">
@@ -595,7 +693,25 @@ function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('collapsed', !open);
     document.getElementById('topnav').classList.toggle('collapsed', !open);
     document.getElementById('main').classList.toggle('collapsed', !open);
+    document.getElementById('sidebarToggle').classList.toggle('open', open);
+    localStorage.setItem('simpkl-sidebar', open ? 'open' : 'collapsed');
 }
+(function(){
+    const state = localStorage.getItem('simpkl-sidebar');
+    const sb  = document.getElementById('sidebar');
+    const btn = document.getElementById('sidebarToggle');
+    const tn  = document.getElementById('topnav');
+    const mn  = document.getElementById('main');
+    if (state === 'collapsed') {
+        open = false;
+        sb.classList.add('collapsed');
+        tn.classList.add('collapsed');
+        mn.classList.add('collapsed');
+        btn.classList.remove('open');
+    } else {
+        btn.classList.add('open');
+    }
+})();
 
 </script>
 </body>
