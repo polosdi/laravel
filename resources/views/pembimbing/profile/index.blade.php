@@ -1,12 +1,9 @@
-@extends('layouts.siswa')
+@extends('layouts.pembimbing')
 @section('title','Profil Saya')
-@section('page_title','Profil Saya')
 @section('nav_profil','active')
 
-@section('styles')
-{{-- NOTE: @yield('styles') di siswa.blade.php ada di DALAM <style> tag,
-     jadi semua CSS di sini langsung ditulis tanpa wrapper <style> --}}
-
+@section('content')
+<style>
 /* ── PROFIL GRID ── */
 .profil-grid {
     display: grid;
@@ -15,7 +12,7 @@
     align-items: start;
 }
 
-/* ── HERO BANNER (foto profil - horizontal) ── */
+/* ── HERO BANNER ── */
 .profil-hero {
     grid-column: 1 / -1;
     background: var(--card-bg);
@@ -93,23 +90,17 @@
     background: rgba(102,126,234,.1);
     color: var(--primary);
 }
-.profil-hero-sep {
-    color: var(--border);
-    font-size: .8rem;
-}
-.profil-hero-sub {
-    font-size: .75rem;
-    color: var(--text-muted);
-}
-.profil-hero-nis {
+.profil-hero-sep { color: var(--border); font-size: .8rem; }
+.profil-hero-sub { font-size: .75rem; color: var(--text-muted); }
+.profil-hero-nip {
     margin-top: 10px;
     display: flex;
     align-items: center;
     gap: 6px;
     font-size: .72rem;
 }
-.profil-hero-nis-label { color: var(--text-sub); }
-.profil-hero-nis-val {
+.profil-hero-nip-label { color: var(--text-muted); }
+.profil-hero-nip-val {
     font-weight: 700;
     color: var(--text);
     font-family: monospace;
@@ -122,7 +113,7 @@
     font-weight: 700;
     letter-spacing: .07em;
     text-transform: uppercase;
-    color: var(--text-sub);
+    color: var(--text-muted);
     margin-bottom: 12px;
     padding-bottom: 6px;
     border-bottom: 1px solid var(--border);
@@ -135,11 +126,7 @@
 
 /* ── FORM CONTROLS ── */
 .form-group { display: flex; flex-direction: column; gap: 5px; }
-.form-label {
-    font-size: .75rem;
-    font-weight: 600;
-    color: var(--text-muted);
-}
+.form-label { font-size: .75rem; font-weight: 600; color: var(--text-muted); }
 .form-label span { color: var(--primary); }
 .form-control {
     padding: 9px 12px;
@@ -158,16 +145,31 @@
     box-shadow: 0 0 0 3px rgba(102,126,234,.12);
 }
 .form-control:disabled {
-    background: var(--tag-bg);
+    background: var(--sb-bg);
     color: var(--text-muted);
     cursor: not-allowed;
 }
 .form-control.is-invalid { border-color: #ef4444; }
 .invalid-feedback { font-size: .7rem; color: #ef4444; margin-top: 2px; }
-.form-hint { font-size: .68rem; color: var(--text-sub); margin-top: 2px; }
+.form-hint { font-size: .68rem; color: var(--text-muted); margin-top: 2px; }
 
 select.form-control { cursor: pointer; }
 textarea.form-control { resize: vertical; }
+
+/* ── CARD ── */
+.pcard {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+}
+.pcard-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+    font-size: .82rem; font-weight: 700; color: var(--text);
+}
+.pcard-body { padding: 20px; }
 
 /* ── FOOTER ACTIONS ── */
 .form-footer {
@@ -179,15 +181,33 @@ textarea.form-control { resize: vertical; }
     margin-top: 4px;
 }
 
-/* ── PASSWORD CARD ── */
-.pass-card-title {
-    font-size: .82rem;
-    font-weight: 700;
-    color: var(--text);
-    display: flex;
-    align-items: center;
-    gap: 6px;
+/* ── BUTTONS ── */
+.btn-primary {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 9px 18px;
+    background: var(--grad);
+    color: white; border: none; border-radius: 10px;
+    font-size: .8rem; font-weight: 600; font-family: var(--font);
+    cursor: pointer; transition: opacity .2s, transform .2s;
 }
+.btn-primary:hover { opacity: .88; transform: translateY(-1px); }
+
+.btn-secondary {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 9px 18px;
+    background: transparent;
+    color: var(--text-muted);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-size: .8rem; font-weight: 600; font-family: var(--font);
+    cursor: pointer; transition: all .2s;
+}
+.btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+
+/* ── PAGE HEADER ── */
+.page-header { margin-bottom: 20px; }
+.page-title { font-size: 1.25rem; font-weight: 800; color: var(--text); }
+.page-sub { font-size: .78rem; color: var(--text-muted); margin-top: 3px; }
 
 @media (max-width: 960px) {
     .profil-grid { grid-template-columns: 1fr; }
@@ -196,71 +216,70 @@ textarea.form-control { resize: vertical; }
 @media (max-width: 600px) {
     .profil-hero { flex-direction: column; text-align: center; }
     .profil-hero-meta { justify-content: center; }
-    .profil-hero-nis { justify-content: center; }
-    .form-grid-2,
-    .form-grid-3 { grid-template-columns: 1fr; }
+    .form-grid-2, .form-grid-3 { grid-template-columns: 1fr; }
 }
-@endsection
+</style>
 
-@section('content')
+<div class="page-header">
+    <div class="page-title">Profil Saya</div>
+    <div class="page-sub">Kelola informasi akun dan data diri Anda</div>
+</div>
+
+@if(session('success'))
+    <div class="al al-ok" style="margin-bottom:16px"><i class="fa-solid fa-circle-check"></i> {{ session('success') }}</div>
+@endif
+@if(session('error'))
+    <div class="al al-err" style="margin-bottom:16px"><i class="fa-solid fa-circle-xmark"></i> {{ session('error') }}</div>
+@endif
+
 <div class="profil-grid">
 
-    {{-- ── HERO: Foto Profil (full width di atas) ── --}}
+    {{-- ── HERO BANNER ── --}}
     <div class="profil-hero">
         <div class="profil-hero-avatar-wrap">
-            @if($siswa?->foto_profil)
-                <img src="{{ asset('storage/'.$siswa->foto_profil) }}"
-                     class="profil-hero-img" alt="Foto Profil">
+            @php $profil = auth()->user()->profilPembimbing; @endphp
+            @if($profil?->foto_profil)
+                <img src="{{ asset('storage/'.$profil->foto_profil) }}" alt="foto" class="profil-hero-img">
             @else
-                <div class="profil-hero-initials">{{ $user->inisial() }}</div>
-            @endif
-
-            {{-- Tombol upload langsung di atas avatar --}}
-            <form action="{{ route('siswa.profil.foto') }}" method="POST"
-                  enctype="multipart/form-data" style="display:inline">
-                @csrf
-                <input type="file" name="foto_profil" id="foto-input"
-                       accept="image/*" style="display:none"
-                       onchange="this.form.submit()">
-                <div class="profil-hero-upload-btn"
-                     onclick="document.getElementById('foto-input').click()"
-                     title="Ganti foto">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                <div class="profil-hero-initials">
+                    {{ strtoupper(substr(auth()->user()->nama_depan,0,1).substr(auth()->user()->nama_belakang,0,1)) }}
                 </div>
+            @endif
+            <form action="{{ route('pembimbing.profil.foto') }}" method="POST" enctype="multipart/form-data" id="fotoForm">
+                @csrf @method('PUT')
+                <label for="fotoInput" class="profil-hero-upload-btn" title="Ganti foto">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                </label>
+                <input type="file" id="fotoInput" name="foto_profil" accept="image/*"
+                       style="display:none" onchange="document.getElementById('fotoForm').submit()">
             </form>
         </div>
 
         <div class="profil-hero-info">
-            <div class="profil-hero-name">{{ $user->namaLengkap() }}</div>
+            <div class="profil-hero-name">{{ auth()->user()->nama_depan }} {{ auth()->user()->nama_belakang }}</div>
             <div class="profil-hero-meta">
-                <span class="profil-hero-badge">Siswa PKL</span>
-                @if($siswa?->jurusan)
+                <span class="profil-hero-badge">Guru Pembimbing</span>
+                @if($profil?->mata_pelajaran)
                     <span class="profil-hero-sep">·</span>
-                    <span class="profil-hero-sub">{{ $siswa->jurusan }}</span>
-                @endif
-                @if($siswa?->kelas)
-                    <span class="profil-hero-sep">·</span>
-                    <span class="profil-hero-sub">{{ $siswa->kelas }}</span>
+                    <span class="profil-hero-sub">{{ $profil->mata_pelajaran }}</span>
                 @endif
             </div>
-            <div class="profil-hero-nis">
-                <span class="profil-hero-nis-label">NIS</span>
-                <span class="profil-hero-nis-val">{{ $siswa?->nis ?? '—' }}</span>
+            <div class="profil-hero-nip">
+                <span class="profil-hero-nip-label">NIP</span>
+                <span class="profil-hero-nip-val">{{ $profil?->nip ?? '—' }}</span>
             </div>
         </div>
     </div>
 
-    {{-- ── KOLOM KIRI: Password ── --}}
+    {{-- ── KOLOM KIRI: Ganti Password ── --}}
     <div>
-        <div class="card">
-            <div class="card-header">
-                <div class="pass-card-title">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;flex-shrink:0"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                    Ganti Password
-                </div>
+        <div class="pcard">
+            <div class="pcard-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;flex-shrink:0"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Ganti Password
             </div>
-            <div class="card-body">
-                <form action="{{ route('siswa.profil.password') }}" method="POST">
+            <div class="pcard-body">
+                <form action="{{ route('pembimbing.profil.password') }}" method="POST">
                     @csrf @method('PUT')
 
                     <div class="form-group" style="margin-bottom:12px">
@@ -276,15 +295,13 @@ textarea.form-control { resize: vertical; }
                     <div class="form-group" style="margin-bottom:12px">
                         <label class="form-label">Password Baru</label>
                         <input type="password" name="password_baru"
-                               class="form-control"
-                               placeholder="Min 8 karakter" required>
+                               class="form-control" placeholder="Min 8 karakter" required>
                     </div>
 
                     <div class="form-group" style="margin-bottom:16px">
                         <label class="form-label">Konfirmasi Password</label>
                         <input type="password" name="password_baru_confirmation"
-                               class="form-control"
-                               placeholder="Ulangi password baru" required>
+                               class="form-control" placeholder="Ulangi password baru" required>
                     </div>
 
                     <button type="submit" class="btn-primary" style="width:100%;justify-content:center">
@@ -296,15 +313,13 @@ textarea.form-control { resize: vertical; }
     </div>
 
     {{-- ── KOLOM KANAN: Form Data Diri ── --}}
-    <div class="card">
-        <div class="card-header">
-            <div class="card-title-sm" style="display:flex;align-items:center;gap:6px">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;flex-shrink:0"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                    Data Diri
-                </div>
+    <div class="pcard">
+        <div class="pcard-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;flex-shrink:0"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Data Diri
         </div>
-        <div class="card-body">
-            <form action="{{ route('siswa.profil.update') }}" method="POST">
+        <div class="pcard-body">
+            <form action="{{ route('pembimbing.profil.update') }}" method="POST">
                 @csrf @method('PUT')
 
                 {{-- AKUN --}}
@@ -314,49 +329,39 @@ textarea.form-control { resize: vertical; }
                         <label class="form-label">Nama Depan <span>*</span></label>
                         <input type="text" name="nama_depan"
                                class="form-control {{ $errors->has('nama_depan') ? 'is-invalid' : '' }}"
-                               value="{{ old('nama_depan', $user->nama_depan) }}" required>
-                        @error('nama_depan')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                               value="{{ old('nama_depan', auth()->user()->nama_depan) }}" required>
+                        @error('nama_depan') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                     <div class="form-group">
                         <label class="form-label">Nama Belakang <span>*</span></label>
                         <input type="text" name="nama_belakang"
                                class="form-control {{ $errors->has('nama_belakang') ? 'is-invalid' : '' }}"
-                               value="{{ old('nama_belakang', $user->nama_belakang) }}" required>
-                        @error('nama_belakang')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                               value="{{ old('nama_belakang', auth()->user()->nama_belakang) }}" required>
+                        @error('nama_belakang') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                     <div class="form-group col-full">
                         <label class="form-label">Email <span>*</span></label>
                         <input type="email" name="email"
                                class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}"
-                               value="{{ old('email', $user->email) }}" required>
-                        @error('email')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                               value="{{ old('email', auth()->user()->email) }}" required>
+                        @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                 </div>
 
-                {{-- INFO SEKOLAH --}}
-                <div class="form-section-label">Info Sekolah</div>
-                <div class="form-grid-3">
+                {{-- INFO MENGAJAR --}}
+                <div class="form-section-label">Info Mengajar</div>
+                <div class="form-grid-2">
                     <div class="form-group">
-                        <label class="form-label">NIS</label>
+                        <label class="form-label">NIP</label>
                         <input type="text" class="form-control"
-                               value="{{ $siswa?->nis ?? '—' }}" disabled>
+                               value="{{ $profil?->nip ?? '—' }}" disabled>
                         <div class="form-hint">Diatur oleh admin</div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Kelas</label>
-                        <input type="text" name="kelas" class="form-control"
-                               value="{{ old('kelas', $siswa?->kelas) }}" placeholder="XII RPL 1">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Jurusan</label>
-                        <input type="text" name="jurusan" class="form-control"
-                               value="{{ old('jurusan', $siswa?->jurusan) }}" placeholder="Rekayasa Perangkat Lunak">
+                        <label class="form-label">Mata Pelajaran</label>
+                        <input type="text" name="mata_pelajaran" class="form-control"
+                               value="{{ old('mata_pelajaran', $profil?->mata_pelajaran) }}"
+                               placeholder="Pemrograman Web">
                     </div>
                 </div>
 
@@ -367,43 +372,29 @@ textarea.form-control { resize: vertical; }
                         <label class="form-label">Jenis Kelamin</label>
                         <select name="jenis_kelamin" class="form-control">
                             <option value="">-- Pilih --</option>
-                            <option value="Laki-laki" {{ old('jenis_kelamin', $siswa?->jenis_kelamin) === 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
-                            <option value="Perempuan" {{ old('jenis_kelamin', $siswa?->jenis_kelamin) === 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                            <option value="Laki-laki" {{ old('jenis_kelamin', $profil?->jenis_kelamin) === 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                            <option value="Perempuan" {{ old('jenis_kelamin', $profil?->jenis_kelamin) === 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
                         </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Agama</label>
-                        <input type="text" name="agama" class="form-control"
-                               value="{{ old('agama', $siswa?->agama) }}" placeholder="Islam">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Tempat Lahir</label>
-                        <input type="text" name="tempat_lahir" class="form-control"
-                               value="{{ old('tempat_lahir', $siswa?->tempat_lahir) }}" placeholder="Bandung">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Tanggal Lahir</label>
-                        <input type="date" name="tanggal_lahir" class="form-control"
-                               value="{{ old('tanggal_lahir', $siswa?->tanggal_lahir?->format('Y-m-d')) }}">
                     </div>
                     <div class="form-group">
                         <label class="form-label">No. HP</label>
                         <input type="text" name="no_hp" class="form-control"
-                               value="{{ old('no_hp', $siswa?->no_hp) }}" placeholder="08xxxxxxxxxx">
+                               value="{{ old('no_hp', $profil?->no_hp) }}" placeholder="08xxxxxxxxxx">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Golongan Darah</label>
-                        <select name="golongan_darah" class="form-control">
-                            <option value="">-- Pilih --</option>
-                            @foreach(['A','B','AB','O'] as $gd)
-                            <option value="{{ $gd }}" {{ old('golongan_darah', $siswa?->golongan_darah) === $gd ? 'selected' : '' }}>{{ $gd }}</option>
-                            @endforeach
-                        </select>
+                        <label class="form-label">Tempat Lahir</label>
+                        <input type="text" name="tempat_lahir" class="form-control"
+                               value="{{ old('tempat_lahir', $profil?->tempat_lahir) }}" placeholder="Bandung">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tanggal Lahir</label>
+                        <input type="date" name="tanggal_lahir" class="form-control"
+                               value="{{ old('tanggal_lahir', $profil?->tanggal_lahir?->format('Y-m-d')) }}">
                     </div>
                     <div class="form-group col-full">
                         <label class="form-label">Alamat Lengkap</label>
                         <textarea name="alamat" rows="3" class="form-control"
-                                  placeholder="Jl. Contoh No. 1, Kelurahan...">{{ old('alamat', $siswa?->alamat) }}</textarea>
+                                  placeholder="Jl. Contoh No. 1, Kelurahan...">{{ old('alamat', $profil?->alamat) }}</textarea>
                     </div>
                 </div>
 
